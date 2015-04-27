@@ -39,7 +39,7 @@ mkdir -p "$BUILD_DIR" "$TARGET_DIR"
 
 echo "#### FFmpeg static build, by STVS SA ####"
 cd $BUILD_DIR
-git clone "https://github.com/dbry/WavPack.git"
+git clone "https://github.com/savonet/shine.git"
 ../fetchurl "http://www.tortall.net/projects/yasm/releases/yasm-1.3.0.tar.gz"
 ../fetchurl "http://zlib.net/zlib-1.2.8.tar.gz"
 ../fetchurl "http://www.bzip.org/1.0.6/bzip2-1.0.6.tar.gz"
@@ -54,13 +54,6 @@ git clone "https://github.com/dbry/WavPack.git"
 ../fetchurl "http://downloads.sourceforge.net/project/lame/lame/3.99/lame-3.99.5.tar.gz"
 ../fetchurl "http://downloads.xiph.org/releases/opus/opus-1.1.tar.gz"
 ../fetchurl "http://www.ffmpeg.org/releases/ffmpeg-2.3.3.tar.bz2"
-
-echo "*** Building WavPack ***"
-cd $BUILD_DIR/WavPack*
-./autogen.sh
-./configure --prefix=$TARGET_DIR
-make -j $jval
-make install
 
 echo "*** Building yasm ***"
 cd $BUILD_DIR/yasm*
@@ -133,8 +126,15 @@ make -j $jval
 make install
 #rm $TARGET_DIR/lib/libxvidcore.so.*
 
-echo "*** Building lame ***"
-cd $BUILD_DIR/lame*
+#echo "*** Building lame ***"
+#cd $BUILD_DIR/lame*
+#./configure --prefix=$TARGET_DIR --enable-static --disable-shared
+#make -j $jval
+#make install
+
+echo "*** Building shine ***"
+cd $BUILD_DIR/shine*
+./bootstrap
 ./configure --prefix=$TARGET_DIR --enable-static --disable-shared
 make -j $jval
 make install
@@ -170,7 +170,6 @@ CFLAGS="-I$TARGET_DIR/include" LDFLAGS="-L$TARGET_DIR/lib -lm" ./configure\
  --enable-gray\
  --enable-runtime-cpudetect\
  --enable-libfaac\
- --enable-libmp3lame\
  --enable-libopus\
  --enable-libtheora\
  --enable-libvorbis\
@@ -182,5 +181,8 @@ CFLAGS="-I$TARGET_DIR/include" LDFLAGS="-L$TARGET_DIR/lib -lm" ./configure\
  --enable-version3\
  --enable-libvpx\
  --disable-devices\
- --enable-libwavpack
+ --enable-libshine #shine added
+# --enable-libmp3lame
 make -j $jval 
+
+#&& make install
